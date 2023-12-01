@@ -1,7 +1,10 @@
-fun main(args: Array<String>) {
-    println("Hello World!")
+import day1.Trebuchet
 
-    // Try adding program arguments via Run/Debug configuration.
-    // Learn more about running applications: https://www.jetbrains.com/help/idea/running-applications.html.
-    println("Program arguments: ${args.joinToString()}")
+fun main(args: Array<String>) {
+    day1()
+}
+
+private fun day1() {
+    val value = Trebuchet.processCalibrationValue(DAY_1_INPUT)
+    println("sum of all of the calibration values $value")
 }
