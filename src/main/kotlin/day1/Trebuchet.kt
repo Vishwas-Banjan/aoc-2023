@@ -8,19 +8,14 @@ object Trebuchet {
     private fun getCalibrationValueForLine(input: String): Int {
         val indexOfFirstDigit = input.indexOfFirst { it.isDigit() }
         val firstDigit = (if (indexOfFirstDigit >= 0) input[indexOfFirstDigit] else -1).toString().toInt()
-
         val findFirstSpelledDigitRes = input.firstSpelledDigitIndexed()
 
         val indexOfLastDigit = input.indexOfLast { it.isDigit() }
         val lastDigit = (if (indexOfLastDigit >= 0) input[indexOfLastDigit] else -1).toString().toInt()
-
         val findLastSpelledDigitRes = input.lastSpelledDigitIndexed()
 
-        val firstNumRes = firstValidPair(indexOfFirstDigit to firstDigit, findFirstSpelledDigitRes)
-        val firstNum = firstNumRes.second
-
-        val lastNumRes = lastValidPair(indexOfLastDigit to lastDigit, findLastSpelledDigitRes)
-        val lastNum = lastNumRes.second
+        val firstNum = firstValidPair(indexOfFirstDigit to firstDigit, findFirstSpelledDigitRes).second
+        val lastNum = lastValidPair(indexOfLastDigit to lastDigit, findLastSpelledDigitRes).second
 
         return (firstNum * 10) + lastNum
     }
