@@ -2,11 +2,13 @@ import day1.Trebuchet
 import day2.CubeConundrum
 import day2.DAY_2_INPUT
 import day3.DAY_3_INPUT
-import day3.DAY_3_TEST_INPUT
 import day3.GearRatios
+import day4.DAY_4_INPUT
+import day4.DAY_4_TEST_INPUT
+import day4.Scratchcards
 
-fun main(args: Array<String>) {
-    day3()
+fun main() {
+    day4()
 }
 
 private fun day1() {
@@ -27,4 +29,12 @@ private fun day3(){
     println("Part 1: sum of all of the engine parts $value")
     val part2 = GearRatios.sumOfEnginePartsSchematic2(DAY_3_INPUT, '*')
     println("Part 2: sum of all of the engine parts $part2")
+}
+
+private fun day4(){
+    val value = Scratchcards.calculateScratchcardPrizes(DAY_4_INPUT)
+    println("Part 1: sum of all of the scratchcard prizes $value")
+
+    val part2 = Scratchcards.calculateTotalScratchcards(DAY_4_INPUT)
+    println("Part 2: sum of all of the scratchcard prizes $part2")
 }
