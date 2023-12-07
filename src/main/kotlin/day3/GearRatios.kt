@@ -84,25 +84,18 @@ object GearRatios {
     }
 
     private fun hasAdjacentSymbols(indexRange: IntRange, input: Array<CharArray>, rowIndex: Int): Boolean {
-        for (columnIndex in indexRange) {
-            val res = input.getValidValues(*getAdjacentCoordinates(rowIndex, columnIndex).toTypedArray())
+        return indexRange.any { columnIndex ->
+            input.getValidValues(*getAdjacentCoordinates(rowIndex, columnIndex).toTypedArray())
                 .any { !it.isDigit() && it != '.' }
-            if (res) return true
         }
-        return false
     }
 
     private fun getAdjacentCoordinates(row: Int, column: Int): List<Pair<Int, Int>> {
         return listOf(
-            row to column - 1, // left
-            row to column + 1, // right
-            row - 1 to column, // top
-            row - 1 to column - 1, // top left
-            row - 1 to column + 1, // top right
-            row + 1 to column, // bottom
-            row + 1 to column - 1, // bottom left
-            row + 1 to column + 1 // bottom right
-        )
+            -1 to -1, -1 to 0, -1 to 1, // top left, top, top right
+            0 to -1, 0 to 1, // left, right
+            1 to -1, 1 to 0, 1 to 1 // bottom left, bottom, bottom right
+        ).map { (rowOffset, columnOffset) -> row + rowOffset to column + columnOffset }
     }
 
     private fun Array<CharArray>.getValidValues(vararg rowToColumnIndex: Pair<Int, Int>): List<Char> {
