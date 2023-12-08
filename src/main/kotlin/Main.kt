@@ -4,11 +4,12 @@ import day2.DAY_2_INPUT
 import day3.DAY_3_INPUT
 import day3.GearRatios
 import day4.DAY_4_INPUT
-import day4.DAY_4_TEST_INPUT
 import day4.Scratchcards
+import day5.DAY_5_INPUT
+import day5.SeedAFertilizer
 
 fun main() {
-    day4()
+    day5()
 }
 
 private fun day1() {
@@ -16,25 +17,33 @@ private fun day1() {
     println("sum of all of the calibration values $value")
 }
 
-private fun day2(){
-    val value =  CubeConundrum.sumGameIDs(DAY_2_INPUT, "12 red cubes, 13 green cubes, 14 blue")
+private fun day2() {
+    val value = CubeConundrum.sumGameIDs(DAY_2_INPUT, "12 red cubes, 13 green cubes, 14 blue")
     println("sum of all of the game IDs $value")
 
     val part2 = CubeConundrum.sumPowerSets(DAY_2_INPUT)
     println("sum of all of the power sets $part2")
 }
 
-private fun day3(){
+private fun day3() {
     val value = GearRatios.sumOfEnginePartsSchematic1(DAY_3_INPUT)
     println("Part 1: sum of all of the engine parts $value")
     val part2 = GearRatios.sumOfEnginePartsSchematic2(DAY_3_INPUT, '*')
     println("Part 2: sum of all of the engine parts $part2")
 }
 
-private fun day4(){
+private fun day4() {
     val value = Scratchcards.calculateScratchcardPrizes(DAY_4_INPUT)
     println("Part 1: sum of all of the scratchcard prizes $value")
 
     val part2 = Scratchcards.calculateTotalScratchcards(DAY_4_INPUT)
     println("Part 2: sum of all of the scratchcard prizes $part2")
+}
+
+private fun day5() {
+    val value = SeedAFertilizer.getLowestLocationPart1(DAY_5_INPUT)
+    println("Part 1: lowest location $value")
+
+    val part2 = SeedAFertilizer.getLowestLocationPart2(DAY_5_INPUT)
+    println("Part 2: lowest location $part2")
 }
