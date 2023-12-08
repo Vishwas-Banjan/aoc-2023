@@ -48,13 +48,11 @@ object SeedAFertilizer {
         }
 
         return seeds.minOf { seedRange ->
-            println("seedRange: $seedRange")
             seedRange.minOf { seed ->
                 getLocationForSeed(seed)
             }
         }
     }
-
 
     private fun createRangedSeedMap(seeds: List<Long>): List<LongRange> {
         return mutableListOf<LongRange>().apply {
@@ -66,25 +64,25 @@ object SeedAFertilizer {
         }
     }
 
-    private fun MutableMap<LongRange, LongRange>.getValueForCustomKey(key: Long): Long {
-        val range = this.keys.find { keyRange ->
-            keyRange.contains(key)
-        } ?: return key
-        val offset = key - range.first
-        val valueRange = this[range]!!
-        return valueRange.first + offset
+    private fun IntervalTree.getValueForCustomKey(key: Long): Long {
+        return findValueForKey(key)
     }
 
-    private fun createExpandedMap(srcToDestMap: List<List<Long>>): MutableMap<LongRange, LongRange> {
-        return mutableMapOf<LongRange, LongRange>().apply {
-            srcToDestMap.forEach {
-                val destStart = it[0]
-                val srcStart = it[1]
-                val range = it[2] - 1
+    private fun createExpandedMap(srcToDestMap: List<List<Long>>): IntervalTree {
+        val intervalTree = IntervalTree()
 
-                this[LongRange(srcStart, srcStart + range)] = LongRange(destStart, destStart + range)
-            }
+        srcToDestMap.forEach {
+            val destStart = it[0]
+            val srcStart = it[1]
+            val range = it[2] - 1
+
+            val srcRange = LongRange(srcStart, srcStart + range)
+            val destRange = LongRange(destStart, destStart + range)
+
+            intervalTree.insert(srcRange, destRange)
         }
+
+        return intervalTree
     }
 
     private fun parseInputString(input: String): RawAlmanacData {
@@ -134,4 +132,76 @@ object SeedAFertilizer {
         val temperatureToHumidityMap: List<List<Long>>,
         val humidityToLocationMap: List<List<Long>>
     )
+
+    class IntervalTree {
+        data class Node(
+            val range: LongRange,
+            var valueRange: LongRange,
+            var left: Node? = null,
+            var right: Node? = null
+        )
+
+        private var root: Node? = null
+
+        fun insert(range: LongRange, valueRange: LongRange) {
+            root = insert(root, range, valueRange)
+        }
+
+        private fun insert(node: Node?, range: LongRange, valueRange: LongRange): Node {
+            if (node == null) {
+                return Node(range, valueRange, null, null)
+            }
+
+            val cmp = compareRanges(range, node.range)
+
+            if (cmp < 0) {
+                node.left = insert(node.left, range, valueRange)
+            } else {
+                node.right = insert(node.right, range, valueRange)
+            }
+
+            return node
+        }
+
+        fun findValueForKey(key: Long): Long {
+            return findValueForKey(root, key)
+        }
+
+        private fun findValueForKey(node: Node?, key: Long): Long {
+            if (node == null) {
+                return key
+            }
+
+            val cmp = compareKeyToRange(key, node.range)
+
+            return when {
+                cmp < 0 -> findValueForKey(node.left, key)
+                cmp > 0 -> findValueForKey(node.right, key)
+                else -> node.valueRange.first + (key - node.range.first)
+            }
+        }
+
+        private fun compareRanges(range1: LongRange, range2: LongRange): Int {
+            return compareValues(range1.first, range2.first)
+        }
+
+        private fun compareKeyToRange(key: Long, range: LongRange): Int {
+            val first = range.first
+            val last = range.last
+            return if(key in first..last) 0 else if (key < first) -1 else 1
+        }
+
+        fun printTree() {
+            printTree(root)
+        }
+
+        private fun printTree(node: Node?) {
+            if (node != null) {
+                printTree(node.left)
+                println("Range: ${node.range}, Value Range: ${node.valueRange}")
+                printTree(node.right)
+            }
+        }
+    }
+
 }
