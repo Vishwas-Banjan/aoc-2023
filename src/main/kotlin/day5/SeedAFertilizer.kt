@@ -188,7 +188,7 @@ object SeedAFertilizer {
         private fun compareKeyToRange(key: Long, range: LongRange): Int {
             val first = range.first
             val last = range.last
-            return if(key in first..last) 0 else if (key < first) -1 else 1
+            return if (key in first..last) 0 else if (key < first) -1 else 1
         }
 
         fun printTree() {
