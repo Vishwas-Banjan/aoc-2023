@@ -7,9 +7,10 @@ import day4.DAY_4_INPUT
 import day4.Scratchcards
 import day5.DAY_5_INPUT
 import day5.SeedAFertilizer
+import day6.*
 
 fun main() {
-    day5()
+    day6()
 }
 
 private fun day1() {
@@ -46,4 +47,9 @@ private fun day5() {
 
     val part2 = SeedAFertilizer.getLowestLocationPart2(DAY_5_INPUT)
     println("Part 2: lowest location $part2")
+}
+
+private fun day6() {
+    val value = BoatRace.getNumOfWays(DAY_6_INPUT_PART2)
+    println("ways you can beat the record $value")
 }
