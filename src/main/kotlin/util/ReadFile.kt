@@ -16,7 +16,7 @@ object ReadFile {
                     stringBuilder.append(line).append("\n")
                 }
 
-                fileContent = stringBuilder.toString()
+                fileContent = stringBuilder.trim().toString()
             }
         } catch (e: IOException) {
             e.printStackTrace()

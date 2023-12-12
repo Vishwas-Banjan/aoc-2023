@@ -172,7 +172,7 @@ object CamelCards {
     }
 
     private fun parseInput(input: String): Map<String, Int> {
-        return input.trim().lines().associate {
+        return input.lines().associate {
             val split = it.split(" ")
             val hand = split[0]
             val bid = split[1].toInt()
