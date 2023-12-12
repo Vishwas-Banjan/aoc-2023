@@ -8,9 +8,12 @@ import day4.Scratchcards
 import day5.DAY_5_INPUT
 import day5.SeedAFertilizer
 import day6.*
+import day7.CamelCards
+import day7.DAY_7_INPUT
+import day7.DAY_7_TEST_INPUT
 
 fun main() {
-    day6()
+    day7()
 }
 
 private fun day1() {
@@ -52,4 +55,12 @@ private fun day5() {
 private fun day6() {
     val value = BoatRace.getNumOfWays(DAY_6_INPUT_PART2)
     println("ways you can beat the record $value")
+}
+
+private fun day7() {
+    val value = CamelCards.getTotalWinningsPart1(DAY_7_INPUT)
+    println("Part1: total winnings $value")
+
+    val part2 = CamelCards.getTotalWinningsPart2(DAY_7_INPUT)
+    println("Part2: total winnings $part2")
 }
