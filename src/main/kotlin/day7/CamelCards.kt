@@ -1,24 +1,34 @@
 package day7
 
 object CamelCards {
-    fun getTotalWinningsPart2(input: String): Int {
+
+    fun getTotalWinningsPart2(input: String): Int =
+        getTotalWinnings(input) { handStr, bid -> getHandTypeRankingPart2(handStr, bid) }
+
+    fun getTotalWinningsPart1(input: String): Int =
+        getTotalWinnings(input) { handStr, bid -> getHandTypeRanking(handStr, bid) }
+
+    private fun getTotalWinnings(input: String, processHand: (String, Int) -> ProcessedHand): Int {
         val handToBidMap = parseInput(input)
-        val rankingList = mutableListOf<Hand>()
+        val rankingList = mutableListOf<ProcessedHand>()
         var totalWinnings = 0
         handToBidMap.forEach { (hand, bid) ->
-            val processedHand = getHandTypeRankingPart2(hand, bid)
+            val processedHand = processHand(hand, bid)
             rankingList.add(processedHand)
         }
-        rankingList.sortWith((compareBy<Hand> { it.handType.rank }.thenBy { it.labelRankArray[0] }
-            .thenBy { it.labelRankArray[1] }.thenBy { it.labelRankArray[2] }.thenBy { it.labelRankArray[3] }
-            .thenBy { it.labelRankArray[4] }))
+        rankingList.sortWith(compareBy<ProcessedHand> { it.handType.rank }
+            .thenBy { it.labelRankArray[0] }
+            .thenBy { it.labelRankArray[1] }
+            .thenBy { it.labelRankArray[2] }
+            .thenBy { it.labelRankArray[3] }
+            .thenBy { it.labelRankArray[4] })
         rankingList.forEachIndexed { index, hand ->
             totalWinnings += (index + 1) * hand.bid
         }
         return totalWinnings
     }
 
-    private fun getHandTypeRankingPart2(hand: String, bid: Int): Hand {
+    private fun getHandTypeRankingPart2(hand: String, bid: Int): ProcessedHand {
         val charToCountMap = mutableMapOf<Char, Int>()
         val labelRankArray = IntArray(5)
         hand.forEachIndexed { index, char ->
@@ -69,7 +79,27 @@ object CamelCards {
         }
 
         val handTypeRank = handRank[handType] ?: throw IllegalStateException("Invalid hand type: $handType")
-        return Hand(hand, Hand.HandType(handType, handTypeRank), labelRankArray, bid)
+        return ProcessedHand(hand, ProcessedHand.HandType(handType, handTypeRank), labelRankArray, bid)
+    }
+
+    private fun getHandTypeRanking(hand: String, bid: Int): ProcessedHand {
+        val charToCountMap = mutableMapOf<Char, Int>()
+        val labelRankArray = IntArray(5)
+        hand.forEachIndexed { index, char ->
+            val count = charToCountMap[char] ?: 0
+            charToCountMap[char] = count + 1
+            labelRankArray[index] = labelRank[char] ?: throw IllegalStateException("Invalid label: $char")
+        }
+        val handType = when (charToCountMap.size) {
+            1 -> "Five of a Kind"
+            2 -> if (charToCountMap.containsValue(4)) "Four of a Kind" else "Full House"
+            3 -> if (charToCountMap.containsValue(3)) "Three of a Kind" else "Two Pair"
+            4 -> "One Pair"
+            5 -> "High Card"
+            else -> throw IllegalStateException("Invalid hand: $hand")
+        }
+        val handTypeRank = handRank[handType] ?: throw IllegalStateException("Invalid hand type: $handType")
+        return ProcessedHand(hand, ProcessedHand.HandType(handType, handTypeRank), labelRankArray, bid)
     }
 
     private val labelRankPart2 = mutableMapOf(
@@ -87,70 +117,6 @@ object CamelCards {
         '2' to 3,
         'J' to 2,
     )
-
-    data class Hand(val value: String, val handType: HandType, val labelRankArray: IntArray, val bid: Int) {
-        data class HandType(val type: String, val rank: Int)
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) return true
-            if (javaClass != other?.javaClass) return false
-
-            other as Hand
-
-            if (value != other.value) return false
-            if (handType != other.handType) return false
-            if (!labelRankArray.contentEquals(other.labelRankArray)) return false
-            if (bid != other.bid) return false
-
-            return true
-        }
-
-        override fun hashCode(): Int {
-            var result = value.hashCode()
-            result = 31 * result + handType.hashCode()
-            result = 31 * result + labelRankArray.contentHashCode()
-            result = 31 * result + bid
-            return result
-        }
-
-    }
-
-    fun getTotalWinningsPart1(input: String): Int {
-        val handToBidMap = parseInput(input)
-        val rankingList = mutableListOf<Triple<Int, IntArray, Int>>()
-        var totalWinnings = 0
-        handToBidMap.forEach { (hand, bid) ->
-            val (handRank, labelRank) = getHandTypeRanking(hand)
-            rankingList.add(Triple(handRank, labelRank, bid))
-        }
-        rankingList.sortWith((compareBy<Triple<Int, IntArray, Int>> { it.first }.thenBy { it.second[0] }
-            .thenBy { it.second[1] }.thenBy { it.second[2] }.thenBy { it.second[3] }
-            .thenBy { it.second[4] }))
-        rankingList.forEachIndexed { index, (_, _, bid) ->
-            totalWinnings += (index + 1) * bid
-        }
-        return totalWinnings
-    }
-
-    private fun getHandTypeRanking(hand: String): Pair<Int, IntArray> {
-        val charToCountMap = mutableMapOf<Char, Int>()
-        val labelRankArray = IntArray(5)
-        hand.forEachIndexed { index, char ->
-            val count = charToCountMap[char] ?: 0
-            charToCountMap[char] = count + 1
-            labelRankArray[index] = labelRank[char] ?: throw IllegalStateException("Invalid label: $char")
-        }
-        val handType = when (charToCountMap.size) {
-            1 -> "Five of a Kind"
-            2 -> if (charToCountMap.containsValue(4)) "Four of a Kind" else "Full House"
-            3 -> if (charToCountMap.containsValue(3)) "Three of a Kind" else "Two Pair"
-            4 -> "One Pair"
-            5 -> "High Card"
-            else -> throw IllegalStateException("Invalid hand: $hand")
-        }
-        val handTypeRank = handRank[handType] ?: throw IllegalStateException("Invalid hand type: $handType")
-        return handTypeRank to labelRankArray
-    }
 
     private val labelRank = mutableMapOf(
         'A' to 14,
@@ -177,6 +143,33 @@ object CamelCards {
         "One Pair" to 2,
         "High Card" to 1
     )
+
+    data class ProcessedHand(val value: String, val handType: HandType, val labelRankArray: IntArray, val bid: Int) {
+        data class HandType(val type: String, val rank: Int)
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as ProcessedHand
+
+            if (value != other.value) return false
+            if (handType != other.handType) return false
+            if (!labelRankArray.contentEquals(other.labelRankArray)) return false
+            if (bid != other.bid) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = value.hashCode()
+            result = 31 * result + handType.hashCode()
+            result = 31 * result + labelRankArray.contentHashCode()
+            result = 31 * result + bid
+            return result
+        }
+
+    }
 
     private fun parseInput(input: String): Map<String, Int> {
         return input.trim().lines().associate {
