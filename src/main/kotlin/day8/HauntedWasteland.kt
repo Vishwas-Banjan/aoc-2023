@@ -26,21 +26,14 @@ object HauntedWasteland {
         startValue: Char,
         endValue: Char,
         directions: List<EdgeType>
-    ): Long {
-        val startTime = System.currentTimeMillis()
-        return graph.findSteps(startValue, endValue, directions).also {
-            println("Time taken ${(System.currentTimeMillis() - startTime)}ms")
-        }
-    }
+    ): Long = graph.findSteps(startValue, endValue, directions)
 
     private fun findSteps(
         graph: DirectedGraph,
         startValue: String,
         endValue: String,
         directions: List<EdgeType>
-    ): Int {
-        return graph.findSteps(startValue, endValue, directions)
-    }
+    ): Int = graph.findSteps(startValue, endValue, directions)
 
     private fun parseInput(input: String): ParsedData {
         val lines = input.split("\n")
@@ -68,8 +61,8 @@ object HauntedWasteland {
 
     class DirectedGraph {
         data class Node(val value: String) {
-            var leftNode: Node? = null
-            var rightNode: Node? = null
+            lateinit var leftNode: Node
+            lateinit var rightNode: Node
         }
 
         private val nodes: MutableMap<String, Node> = mutableMapOf()
@@ -136,8 +129,8 @@ object HauntedWasteland {
                 count++
                 val nextDirectionIndex = (directionIndex + 1) % directions.size
                 currentNode = when (directions[directionIndex]) {
-                    EdgeType.LEFT -> currentNode.leftNode!!
-                    EdgeType.RIGHT -> currentNode.rightNode!!
+                    EdgeType.LEFT -> currentNode.leftNode
+                    EdgeType.RIGHT -> currentNode.rightNode
                 }
                 directionIndex = nextDirectionIndex
             }
@@ -157,8 +150,8 @@ object HauntedWasteland {
                 count++
                 val nextDirectionIndex = (directionIndex + 1) % directions.size
                 currentNode = when (directions[directionIndex]) {
-                    EdgeType.LEFT -> currentNode.leftNode!!
-                    EdgeType.RIGHT -> currentNode.rightNode!!
+                    EdgeType.LEFT -> currentNode.leftNode
+                    EdgeType.RIGHT -> currentNode.rightNode
                 }
                 directionIndex = nextDirectionIndex
             }
@@ -167,7 +160,7 @@ object HauntedWasteland {
 
         fun printGraph() {
             nodes.forEach { (key, value) ->
-                println("Node $key: leftNode = ${value.leftNode?.value}, rightNode = ${value.rightNode?.value}")
+                println("Node $key: leftNode = ${value.leftNode.value}, rightNode = ${value.rightNode.value}")
             }
         }
     }
