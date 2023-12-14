@@ -29,7 +29,7 @@ object HauntedWasteland {
     ): Long {
         val startTime = System.currentTimeMillis()
         return graph.findSteps(startValue, endValue, directions).also {
-            println("Time taken ${(System.currentTimeMillis() - startTime)}")
+            println("Time taken ${(System.currentTimeMillis() - startTime)}ms")
         }
     }
 
