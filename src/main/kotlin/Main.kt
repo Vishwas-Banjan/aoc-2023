@@ -11,9 +11,10 @@ import day6.*
 import day7.CamelCards
 import day7.DAY_7_INPUT
 import day7.DAY_7_TEST_INPUT
+import day8.*
 
 fun main() {
-    day7()
+    day8()
 }
 
 private fun day1() {
@@ -63,4 +64,12 @@ private fun day7() {
 
     val part2 = CamelCards.getTotalWinningsPart2(DAY_7_INPUT)
     println("Part2: total winnings $part2")
+}
+
+private fun day8() {
+    val value = HauntedWasteland.getStepsRequired(DAY_8_INPUT)
+    println("Part1: total steps $value")
+
+    val part2 = HauntedWasteland.getStepsRequiredPart2(DAY_8_INPUT)
+    println("Part2: total steps $part2")
 }
