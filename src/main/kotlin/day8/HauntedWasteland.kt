@@ -91,15 +91,9 @@ object HauntedWasteland {
         private fun addEdge(fromValue: String, toValue: String, type: EdgeType) {
             val fromNode = nodes[fromValue] ?: throw IllegalArgumentException("Node $fromValue not found")
             val toNode = nodes[toValue] ?: throw IllegalArgumentException("Node $toValue not found")
-
             when (type) {
-                EdgeType.LEFT -> {
-                    fromNode.leftNode = toNode
-                }
-
-                EdgeType.RIGHT -> {
-                    fromNode.rightNode = toNode
-                }
+                EdgeType.LEFT -> fromNode.leftNode = toNode
+                EdgeType.RIGHT -> fromNode.rightNode = toNode
             }
         }
 
