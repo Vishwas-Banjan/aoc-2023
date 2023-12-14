@@ -29,4 +29,4 @@ const val DAY_8_TEST_INPUT3 = "LR\n" +
         "22Z = (22B, 22B)\n" +
         "XXX = (XXX, XXX)"
 
-val DAY_8_INPUT = ReadFile.fileToString("/Users/vishbanjan/IdeaProjects/aoc-2023/src/main/kotlin/day8/input_day8.txt")
+val DAY_8_INPUT = ReadFile.fileToString("./src/main/kotlin/day8/input_day8.txt")

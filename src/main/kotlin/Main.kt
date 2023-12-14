@@ -10,7 +10,6 @@ import day5.SeedAFertilizer
 import day6.*
 import day7.CamelCards
 import day7.DAY_7_INPUT
-import day7.DAY_7_TEST_INPUT
 import day8.*
 
 fun main() {
