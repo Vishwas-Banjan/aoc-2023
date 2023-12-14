@@ -104,12 +104,10 @@ object HauntedWasteland {
         }
 
         fun findSteps(startValue: String, endValue: String, directions: List<EdgeType>): Int {
-            var totalStepsCount = 0
             val startNode = nodes[startValue] ?: throw IllegalArgumentException("Node $startValue not found")
             nodes[endValue] ?: throw IllegalArgumentException("Node $endValue not found") // just to check
 //            findRecursive(startNode, endValue, directions, 0) { totalStepsCount++ } // stack overflow on high volumes
-            findIterative(startNode, endValue, directions) { totalStepsCount++ }
-            return totalStepsCount
+            return findIterative(startNode, endValue, directions)
         }
 
         fun findSteps(startEndsIn: Char, endEndsIn: Char, directions: List<EdgeType>): Long {
@@ -156,25 +154,21 @@ object HauntedWasteland {
         private fun findIterative(
             startNode: Node,
             endValue: String,
-            directions: List<EdgeType>,
-            incrementCount: () -> Int
-        ) {
+            directions: List<EdgeType>
+        ): Int {
             var currentNode = startNode
             var directionIndex = 0
+            var count = 0
             while (currentNode.value != endValue) {
-                incrementCount()
+                count++
                 val nextDirectionIndex = (directionIndex + 1) % directions.size
                 currentNode = when (directions[directionIndex]) {
-                    EdgeType.LEFT -> {
-                        currentNode.leftNode!!
-                    }
-
-                    EdgeType.RIGHT -> {
-                        currentNode.rightNode!!
-                    }
+                    EdgeType.LEFT -> currentNode.leftNode!!
+                    EdgeType.RIGHT -> currentNode.rightNode!!
                 }
                 directionIndex = nextDirectionIndex
             }
+            return count
         }
 
         fun printGraph() {
